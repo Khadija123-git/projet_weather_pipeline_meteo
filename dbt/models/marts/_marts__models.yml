@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: dim_locations
+    description: "Table de dimension contenant les informations uniques par ville."
+    columns:
+      - name: location_key
+        description: "Clé primaire (Hash MD5)."
+        tests:
+          - unique   # Vérifie qu'il n'y a pas de doublons de villes
+          - not_null # Vérifie que la clé n'est jamais vide
+
+  - name: fct_weather_measurements
+    description: "Table de faits contenant les mesures météo incrémentales."
+    columns:
+      - name: fact_key
+        tests:
+          - unique
+          - not_null
+      - name: location_key
+        tests:
+          - relationships: # Vérifie l'intégrité référentielle
+              to: ref('dim_locations')
+              field: location_key
+      - name: TEMPERATURE_C
+        description: "Température en Celsius."
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: -50
+              max_value: 60
+      - name: fct_daily_weather_stats
+        description: "Table d'agrégation Gold calculant les statistiques quotidiennes par ville (température moyenne, amplitude thermique, etc.). Utilisée pour les dashboards de haut niveau."
+        columns:
+      
