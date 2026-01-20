@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: snowflake_kafka  # <--- Doit correspondre au 1er mot dans ton source()
+    database: KAFKA_DB     # Nom de ta DB Snowflake
+    schema: RAW            # Nom de ton schéma Snowflake
+    tables:
+      - name: weather_raw  # <--- Doit correspondre au 2ème mot dans ton source()
